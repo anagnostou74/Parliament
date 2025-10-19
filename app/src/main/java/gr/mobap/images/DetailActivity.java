@@ -1,7 +1,6 @@
 package gr.mobap.images;
 
 import android.os.Bundle;
-
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
@@ -18,8 +17,7 @@ import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
 import com.bumptech.glide.Glide;
-import com.google.android.gms.analytics.HitBuilders;
-import com.google.android.gms.analytics.Tracker;
+
 import com.google.firebase.analytics.FirebaseAnalytics;
 
 import java.util.ArrayList;
@@ -44,7 +42,6 @@ public class DetailActivity extends AppCompatActivity {
      * The {@link ViewPager} that will host the section contents.
      */
     private ViewPager mViewPager;
-    private Tracker mTracker;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,12 +53,7 @@ public class DetailActivity extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.content_img_dtl);
-        // [START shared_tracker]
-        // Obtain the shared Tracker instance.
-        AnalyticsApplication application = (AnalyticsApplication) getApplication();
-        mTracker = application.getDefaultTracker();
-        mTracker.send(new HitBuilders.ScreenViewBuilder().build());
-        // [END shared_tracker]
+
 
         data = getIntent().getParcelableArrayListExtra("data");
         pos = getIntent().getIntExtra("pos", 0);

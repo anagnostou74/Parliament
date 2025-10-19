@@ -1,67 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
-    tools:context=".youtube.IntentsTvActivity">
+    android:layout_height="match_parent">
 
     <com.google.android.material.appbar.AppBarLayout
-        style="@style/AppTheme.AppBarOverlay"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/action_bar"
         android:theme="@style/AppTheme.AppBarOverlay">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="?android:attr/actionBarSize"
-            android:theme="@style/AppTheme.PopupOverlay"/>
+            android:layout_height="?attr/actionBarSize"
+            app:title="@string/app_name"/>
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <LinearLayout
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/videosRecycler"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        tools:context=".youtube.IntentsTvActivity">
+        android:clipToPadding="false"
+        android:padding="12dp"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="10dp"
-            android:background="@drawable/shadow" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:drawableLeft="@drawable/vouli_tv"
-            android:padding="16dp"
-            android:text="@string/intent_select"
-            android:textAppearance="?android:attr/textAppearanceSmall" />
-
-        <ListView
-            android:id="@+id/intent_list"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:clipToPadding="false"
-            android:divider="@android:color/transparent"
-            android:dividerHeight="16dp"
-            android:padding="22dp"
-            android:paddingBottom="8dp"
-            android:scrollbarStyle="outsideOverlay" />
-
-        <TextView
-            android:id="@+id/youtube_version_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:textColor="@color/colorPrimaryLight" />
-
-    </LinearLayout>
-
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+</LinearLayout>

@@ -4,18 +4,40 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <View
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipeRefresh"
         android:layout_width="match_parent"
-        android:layout_height="10dp"
-        android:background="@drawable/shadow" />
+        android:layout_height="match_parent">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/calendarList"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:clipToPadding="false"
-        android:padding="5dp"
-        android:scrollbars="vertical"
-        tools:listitem="@layout/item_calendar" />
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/calendarList"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="visible"
+            tools:listitem="@layout/item_calendar"/>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
+    <ProgressBar
+        android:id="@+id/progress"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="gone"/>
+
+    <TextView
+        android:id="@+id/empty"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="@string/no_calendar_items"
+        android:visibility="gone"/>
+
+    <TextView
+        android:id="@+id/error"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="@string/error_loading"
+        android:visibility="gone"/>
 </FrameLayout>

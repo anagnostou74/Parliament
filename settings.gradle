@@ -1,1 +1,18 @@
-include ':app'
+pluginManagement {
+    repositories {
+        google()
+        mavenCentral()
+        maven { url = 'https://jitpack.io' } // άφησέ το μόνο αν πραγματικά το χρειάζεσαι
+        gradlePluginPortal()
+    }
+}
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        google()
+        mavenCentral()
+        maven { url = 'https://jitpack.io' }
+    }
+}
+rootProject.name = "Parliament"
+include(":app")

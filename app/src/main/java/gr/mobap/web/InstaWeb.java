@@ -2,8 +2,6 @@ package gr.mobap.web;
 
 import android.app.ProgressDialog;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,13 +10,14 @@ import android.webkit.WebViewClient;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import com.google.android.gms.analytics.Tracker;
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+
 
 import gr.mobap.AndroidNetworkUtility;
 import gr.mobap.R;
 
 public class InstaWeb extends Fragment {
-    private Tracker mTracker;
 
     private WebView webView;
     private Bundle webViewBundle;
@@ -58,7 +57,7 @@ public class InstaWeb extends Fragment {
                 }
             });
             if (webViewBundle == null) { //Κώδικας για webView save State
-                webView.loadUrl("https://www.instagram.com/parliamentoffice/");
+                webView.loadUrl("https://www.instagram.com/vouli_tv/");
             } else {
                 webView.restoreState(webViewBundle);
             }

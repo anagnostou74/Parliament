@@ -1,5 +1,9 @@
 package gr.mobap.mps;
+import androidx.annotation.Keep;
+import com.google.firebase.database.IgnoreExtraProperties;
 
+@Keep
+@IgnoreExtraProperties
 public class MpsData {
     public String rank;
     public String govRank;

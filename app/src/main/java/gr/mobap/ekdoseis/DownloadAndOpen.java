@@ -18,13 +18,7 @@ import android.widget.Toast;
 
 import androidx.core.content.FileProvider;
 
-import com.google.android.gms.analytics.HitBuilders;
-import com.google.android.gms.analytics.Tracker;
 import com.google.firebase.analytics.FirebaseAnalytics;
-import com.google.firebase.appindexing.Action;
-import com.google.firebase.appindexing.FirebaseAppIndex;
-import com.google.firebase.appindexing.FirebaseUserActions;
-import com.google.firebase.appindexing.builders.Actions;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -42,7 +36,6 @@ public class DownloadAndOpen extends Base {
 
     public String TAG = getClass().getSimpleName();
     private String mPostKey;
-    private Tracker mTracker;
     private FirebaseAnalytics mFirebaseAnalytics;
     public static final String EXTRA_POST_KEY = "post_key";
     private DatabaseReference mEkdoseisReference;
@@ -59,12 +52,6 @@ public class DownloadAndOpen extends Base {
         String action = intent.getAction();
         Uri data = intent.getData();
 
-        // [START shared_tracker]
-        // Obtain the shared Tracker instance.
-        AnalyticsApplication application = (AnalyticsApplication) getApplication();
-        mTracker = application.getDefaultTracker();
-        mTracker.send(new HitBuilders.ScreenViewBuilder().build());
-        // [END shared_tracker]
 
         // Get post key from intent
         mPostKey = getIntent().getStringExtra(EXTRA_POST_KEY);
@@ -136,8 +123,7 @@ public class DownloadAndOpen extends Base {
 
         // Keep copy of post listener so we can remove it when app stops
         mEkdoseiListener = postListener;
-        FirebaseAppIndex.getInstance().update();
-        FirebaseUserActions.getInstance().start(getAction());
+
     }
 
     public void downloadAndOpenPDF(final Context context, final String pdfUrl) {
@@ -223,13 +209,5 @@ public class DownloadAndOpen extends Base {
         context.startActivity(i);
     }
 
-    public Action getAction() {
-        return Actions.newView("Ekdoseis", "pdfURL");
-    }
 
-    @Override
-    protected void onStop() {
-        FirebaseUserActions.getInstance().end(getAction());
-        super.onStop();
-    }
 }

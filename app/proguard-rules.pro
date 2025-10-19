@@ -15,3 +15,30 @@
 #-keepclassmembers class fqcn.of.javascript.interface.for.webview {
 #   public *;
 #}
+# --- Firebase model keeping (Java) ---
+-keepclassmembers class gr.mobap.mps.MpsData {
+    public <init>();
+    public *;
+}
+-keep class gr.mobap.mps.MpsData { *; }
+
+-keepclassmembers class gr.mobap.calendar.CalendarData {
+    public <init>();
+    public *;
+}
+-keep class gr.mobap.calendar.CalendarData { *; }
+
+# Αν έχεις και άλλα models για Firebase:
+-keep class gr.mobap.**.**Data { *; }
+-keepclassmembers class gr.mobap.**.**Data { public <init>(); public *; }
+
+# Διατήρησε annotations που χρησιμοποιεί το Firebase
+-keepattributes *Annotation*, Signature, InnerClasses, EnclosingMethod
+# Αν χρησιμοποιείς @PropertyName/@IgnoreExtraProperties/@Keep
+-keep class com.google.firebase.** { *; }
+-keepclassmembers class * {
+    @com.google.firebase.database.PropertyName *;
+    @com.google.firebase.database.IgnoreExtraProperties *;
+    @androidx.annotation.Keep *;
+}
+

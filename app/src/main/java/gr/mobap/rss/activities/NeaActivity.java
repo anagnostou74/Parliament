@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
@@ -17,14 +16,8 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
-import com.google.android.gms.analytics.HitBuilders;
-import com.google.android.gms.analytics.Tracker;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.analytics.FirebaseAnalytics;
-import com.google.firebase.appindexing.Action;
-import com.google.firebase.appindexing.FirebaseAppIndex;
-import com.google.firebase.appindexing.FirebaseUserActions;
-import com.google.firebase.appindexing.builders.Actions;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,7 +30,6 @@ import gr.mobap.R;
 import gr.mobap.rss.fragments.NeaFragment;
 
 public class NeaActivity extends Base {
-    private Tracker mTracker;
     private FirebaseAnalytics mFirebaseAnalytics;
 
     @Override
@@ -52,11 +44,7 @@ public class NeaActivity extends Base {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         // [START shared_tracker]
-        // Obtain the shared Tracker instance.
-        AnalyticsApplication application = (AnalyticsApplication) getApplication();
-        mTracker = application.getDefaultTracker();
-        mTracker.send(new HitBuilders.ScreenViewBuilder().build());
-        // [END shared_tracker]
+
         Intent intent = getIntent();
         String action = intent.getAction();
         Uri data = intent.getData();
@@ -101,26 +89,6 @@ public class NeaActivity extends Base {
         fragment_container.setAdapter(adapter);
     }
 
-    public Action getAction() {
-        return Actions.newView("Nea page", "http://www.mobap.gr/neaactivity");
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-   /* If you’re logging an action on an item that has already been added to the index,
-   you don’t have to add the following update line. See
-   https://firebase.google.com/docs/app-indexing/android/personal-content#update-the-index for
-   adding content to the index */
-        FirebaseAppIndex.getInstance().update();
-        FirebaseUserActions.getInstance().start(getAction());
-    }
-
-    @Override
-    protected void onStop() {
-        FirebaseUserActions.getInstance().end(getAction());
-        super.onStop();
-    }
 
     public class ViewPagerAdapter extends FragmentPagerAdapter {
         private final List<Fragment> mFragmentList = new ArrayList<>();

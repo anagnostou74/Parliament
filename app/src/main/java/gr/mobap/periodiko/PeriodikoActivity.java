@@ -17,8 +17,6 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
-import com.google.android.gms.analytics.HitBuilders;
-import com.google.android.gms.analytics.Tracker;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.database.DataSnapshot;
@@ -34,9 +32,7 @@ import gr.mobap.R;
 import gr.mobap.ekdoseis.EkdoseisData;
 
 public class PeriodikoActivity extends Base {
-    private Tracker mTracker;
     private FirebaseAnalytics mFirebaseAnalytics;
-
     private WebView webView;
     private Bundle webViewBundle;
     private ProgressDialog progress;
@@ -85,12 +81,6 @@ public class PeriodikoActivity extends Base {
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        // [START shared_tracker]
-        // Obtain the shared Tracker instance.
-        AnalyticsApplication application = (AnalyticsApplication) getApplication();
-        mTracker = application.getDefaultTracker();
-        mTracker.send(new HitBuilders.ScreenViewBuilder().build());
-        // [END shared_tracker]
     }
 
     @Override

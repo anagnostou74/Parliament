@@ -16,7 +16,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
-import com.google.android.gms.analytics.Tracker;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -34,7 +33,6 @@ public class SearchMps extends Fragment {
     private FirebaseRecyclerAdapter<MpsData, MpsViewHolder> mAdapter;
     Query mpsSearchQuery;
     private FirebaseAnalytics mFirebaseAnalytics;
-    private Tracker mTracker;
     private AlertDialog.Builder builder;
     private Button perifereiaButton;
     private Button kommaButton;

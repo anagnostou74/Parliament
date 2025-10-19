@@ -1,6 +1,9 @@
 package gr.mobap.vouli;
 
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.Window;
+import android.view.WindowManager;
 
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.widget.Toolbar;
@@ -11,19 +14,9 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
-import android.view.Menu;
-import android.view.Window;
-import android.view.WindowManager;
-
-import com.google.android.gms.analytics.HitBuilders;
-import com.google.android.gms.analytics.Tracker;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.analytics.FirebaseAnalytics;
-import com.google.firebase.appindexing.Action;
-import com.google.firebase.appindexing.FirebaseAppIndex;
-import com.google.firebase.appindexing.FirebaseUserActions;
-import com.google.firebase.appindexing.builders.Actions;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +27,6 @@ import gr.mobap.R;
 
 public class Thesmos extends Base {
 
-    private Tracker mTracker;
     private FirebaseAnalytics mFirebaseAnalytics;
 
     @Override
@@ -64,15 +56,7 @@ public class Thesmos extends Base {
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        // [START shared_tracker]
-        // Obtain the shared Tracker instance.
-        AnalyticsApplication application = (AnalyticsApplication) getApplication();
-        mTracker = application.getDefaultTracker();
-        // [END shared_tracker]
-        // [START screen_view_hit]
-        mTracker.send(new HitBuilders.ScreenViewBuilder().build());
-        // [END screen_view_hit]
-    }
+         }
 
     @Override
     public void onBackPressed() {
@@ -100,27 +84,6 @@ public class Thesmos extends Base {
         adapter.addFrag(new SyntagmaFragment(), getString(R.string.syntagma));
         adapter.addFrag(new EpitropesFragment(), getString(R.string.epitropes));
         viewPager.setAdapter(adapter);
-    }
-
-    public Action getAction() {
-        return Actions.newView("Thesmos Page", "http://www.mobap.gr/thesmos");
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-   /* If you’re logging an action on an item that has already been added to the index,
-   you don’t have to add the following update line. See
-   https://firebase.google.com/docs/app-indexing/android/personal-content#update-the-index for
-   adding content to the index */
-        FirebaseAppIndex.getInstance().update();
-        FirebaseUserActions.getInstance().start(getAction());
-    }
-
-    @Override
-    protected void onStop() {
-        FirebaseUserActions.getInstance().end(getAction());
-        super.onStop();
     }
 
     public class ViewPagerAdapter extends FragmentPagerAdapter {

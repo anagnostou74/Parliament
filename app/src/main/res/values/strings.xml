@@ -524,7 +524,6 @@ limitations under the License.
     <string name="enimerosi">Ενημέρωση</string>
     <string name="deltia">Δελτία τύπου</string>
     <string name="koin_epitropes">Κοινοβουλευτικές Επιτροπές</string>
-    <string name="diktio">Κοινωνική Δικτύωση</string>
     <string name="entos">Email χρηστών</string>
     <string name="mobap">MobAp.gr</string>
     <string name="play">Play Store</string>
@@ -557,11 +556,6 @@ limitations under the License.
     <string name="menu_share">Κοινοποίηση</string>
     <string name="menu_fb">Facebook</string>
 
-    <string name="timeline_empty">Έρχονται τα Tweets :)</string>
-    <string name="twitter">Twitter</string>
-
-    <!-- TweetComposer strings -->
-
     <string name="perif_label">Περιφέρεια: </string>
     <string name="on_patros_label">του </string>
 
@@ -575,7 +569,7 @@ limitations under the License.
     <string name="kyvernisi">Κυβέρνηση</string>
     <string name="ypourgoi">Υπουργοί</string>
     <string name="ektelestiki">Εκτελεστική Εξουσία</string>
-
+    <string name="yt_channel_id">UC-rbkri30QnGq9Qh-vKbxWA</string>
     <string name="pm_aksioma"><![CDATA[
 <h1>Αξίωμα</h1>
 <p>Ο Πρωθυπουργός είναι ο Πρόεδρος της Κυβέρνησης, ο οποίος διασφαλίζει την ενότητα της Κυβέρνησης και κατευθύνει τις ενέργειές της, καθώς και των δημόσιων υπηρεσιών, για την εφαρμογή της κυβερνητικής πολιτικής μέσα στο πλαίσιο του Συντάγματος και των νόμων. Ως επικεφαλής της Κυβέρνησης, ασκεί εκτελεστική εξουσία, προσδιορίζοντας επακριβώς την κυβερνητική πολιτική στο πλαίσιο των αποφάσεων του Υπουργικού Συμβουλίου και συντονίζει την εφαρμογή της.</p>
@@ -600,6 +594,17 @@ limitations under the License.
 
 <p>Αν και αυτή η διαδικασία δεν εξασφαλίσει τον σχηματισμό κυβέρνησης, ο Πρόεδρος της Δημοκρατίας επιδιώκει τον σχηματισμό εκλογικής κυβέρνησης από όλα τα κόμματα της Βουλής και σε περίπτωση αποτυχίας αναθέτει τον σχηματισμό εκλογικής κυβέρνησης, όσο το δυνατόν ευρύτερης αποδοχής, σε έναν από τους Προέδρους των Ανωτάτων Δικαστηρίων, με αποστολή να οδηγήσει τη χώρα στη διεξαγωγή νέων βουλευτικών εκλογών.</p>
 ]]></string>
+
+    <string name="remind_me">Υπενθύμιση</string>
+    <string name="session_starting">Ξεκινά η συνεδρίαση</string>
+    <string name="channel_calendar_session">Υπενθυμίσεις Ημερολογίου</string>
+    <string name="channel_calendar_session_desc">Ειδοποιήσεις έναρξης συνεδριάσεων</string>
+    <string name="cannot_schedule_past">Δεν γίνεται να οριστεί υπενθύμιση για παρελθόν.</string>
+    <string name="reminder_scheduled">Η υπενθύμιση προστέθηκε.</string>
+    <string name="reminder_canceled">Η υπενθύμιση αφαιρέθηκε.</string>
+    <string name="no_calendar_items">Δεν υπάρχουν συνεδριάσεις</string>
+    <string name="error_loading">Πρόβλημα φόρτωσης δεδομένων</string>
+    <string name="reminder_scheduled_inexact">Η υπενθύμιση προγραμματίστηκε (ενδέχεται μικρή απόκλιση ώρας).\n\nΓια ακριβή ώρα, ενεργοποίησε «Alarms &amp; reminders» στις ρυθμίσεις της εφαρμογής.</string>
 
 
 </resources>

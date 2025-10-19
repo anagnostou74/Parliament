@@ -38,7 +38,23 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:paddingTop="10dp"
+            android:layout_above="@id/galleryCopyright"
+            android:layout_alignParentTop="true"
             app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+        <TextView
+            android:id="@+id/galleryCopyright"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:gravity="center"
+            android:textStyle="italic"
+            android:alpha="0.7"
+            android:text="© ΒτΕ Α. Ελευθερίου"
+            android:textColor="@android:color/holo_blue_dark"
+            android:textSize="14sp"
+            android:padding="8dp" />
+
 
     </RelativeLayout>
 

@@ -14,22 +14,15 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
-import com.google.android.gms.analytics.HitBuilders;
-import com.google.android.gms.analytics.Tracker;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.analytics.FirebaseAnalytics;
-import com.google.firebase.appindexing.Action;
-import com.google.firebase.appindexing.FirebaseAppIndex;
-import com.google.firebase.appindexing.FirebaseUserActions;
-import com.google.firebase.appindexing.builders.Actions;
 
 import gr.mobap.AnalyticsApplication;
 import gr.mobap.Base;
 import gr.mobap.R;
 
 public class GovActivity extends Base {
-    private Tracker mTracker;
     Integer actionBarHeight = null;
     private FirebaseAnalytics mFirebaseAnalytics;
     public String TAG = getClass().getSimpleName();
@@ -67,13 +60,6 @@ public class GovActivity extends Base {
             actionBarHeight = TypedValue.complexToDimensionPixelSize(tv.data, getResources().getDisplayMetrics());
         }
 
-        // [START shared_tracker]
-        // Obtain the shared Tracker instance.
-        AnalyticsApplication application = (AnalyticsApplication) getApplication();
-        mTracker = application.getDefaultTracker();
-        mTracker.send(new HitBuilders.ScreenViewBuilder().build());
-        // [END shared_tracker]
-
 
         // Create the adapter that will return a fragment for each section
         mPagerAdapter = new FragmentStatePagerAdapter(getSupportFragmentManager()) {
@@ -109,26 +95,6 @@ public class GovActivity extends Base {
         TabLayout tabLayout = findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
 
-    }
-
-    public Action getAction() {
-        return Actions.newView("Gov Page", "http://www.mobap.gr/govactivity");
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-   /* If you’re logging an action on an item that has already been added to the index,
-   you don’t have to add the following update line. See
-   https://firebase.google.com/docs/app-indexing/android/personal-content#update-the-index for
-   adding content to the index */
-        FirebaseAppIndex.getInstance().update();
-    }
-
-    @Override
-    protected void onStop() {
-        FirebaseUserActions.getInstance().end(getAction());
-        super.onStop();
     }
 
 }

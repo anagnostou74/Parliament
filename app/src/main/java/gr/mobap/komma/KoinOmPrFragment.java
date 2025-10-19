@@ -14,6 +14,6 @@ public class KoinOmPrFragment extends MpsListFragment {
     @Override
     public Query getQuery(DatabaseReference dbReference) {
 
-        return dbReference.child("mps").orderByChild("pr_ko_rank").startAt("1");
+        return dbReference.child("mps").orderByChild("pr_ko_rank").startAt(1);
     }
 }

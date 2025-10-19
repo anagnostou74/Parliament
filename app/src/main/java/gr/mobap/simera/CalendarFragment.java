@@ -1,17 +1,11 @@
 package gr.mobap.simera;
 
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.Query;
-
+/**
+ * Εμφανίζει τη λίστα ημερολογίου χρησιμοποιώντας την default
+ * συμπεριφορά του CalendarListFragment (orderByChild("dateEpoch")).
+ *
+ * Δεν χρειάζεται override πλέον, μετά το refactor του CalendarListFragment.
+ */
 public class CalendarFragment extends CalendarListFragment {
-    public String TAG = getClass().getSimpleName();
-
-    public CalendarFragment() {
-    }
-
-    @Override
-    public Query getQuery(DatabaseReference dbReference) {
-
-        return dbReference.child("calendar").orderByChild("date");
-    }
+    // No overrides needed.
 }

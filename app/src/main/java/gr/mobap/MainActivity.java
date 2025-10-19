@@ -15,6 +15,15 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.StrictMode;
+import android.util.Log;
+import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.VisibleForTesting;
@@ -26,27 +35,18 @@ import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
-import android.util.Log;
-import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.ProgressBar;
-import android.widget.TextView;
-import android.widget.Toast;
-
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
-import com.google.android.gms.analytics.HitBuilders;
-import com.google.android.gms.analytics.Tracker;
+
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.auth.AuthCredential;
@@ -54,7 +54,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.auth.UserInfo;
-import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.installations.FirebaseInstallations;
 
 import java.io.File;
 
@@ -62,15 +62,16 @@ import gr.mobap.diafaneia.Diafaneia;
 import gr.mobap.ekdoseis.EkdoseisActivity;
 import gr.mobap.images.Image;
 import gr.mobap.komma.KommActivity;
+import gr.mobap.mps.MpsActivity;
 import gr.mobap.organosi.OrganosiActivity;
 import gr.mobap.rss.activities.NeaActivity;
 import gr.mobap.simera.CalendarActivity;
-import gr.mobap.twitter.TimelineActivity;
 import gr.mobap.video.LiveVideoActivity;
 
 public class MainActivity extends Base
         implements GoogleApiClient.OnConnectionFailedListener,
         View.OnClickListener {
+
     private static final int RC_SIGN_IN = 9001;
     private GoogleApiClient mGoogleApiClient;
     private Button mStatusTextView;
@@ -87,7 +88,7 @@ public class MainActivity extends Base
     /**
      * The {link Tracker} used to record screen views.
      */
-    private Tracker mTracker;
+
     private BroadcastReceiver mRegistrationBroadcastReceiver;
     private ProgressBar mRegistrationProgressBar;
     private TextView mInformationTextView;
@@ -99,21 +100,16 @@ public class MainActivity extends Base
     private FirebaseAuth.AuthStateListener mAuthListener;
 
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
-
         //fullscreen
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
-
-        FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(MainActivity.this, instanceIdResult -> {
-            String newToken = instanceIdResult.getToken();
-            Log.e("newToken", newToken);
-
-        });
 
         Intent intent = getIntent();
         String action = intent.getAction();
@@ -121,6 +117,9 @@ public class MainActivity extends Base
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
 
         AppRate.app_launched(this);
+
+        // π.χ. στο onCreate ή όταν ανοίγει οθόνη:
+        AnalyticsTrackers.logScreen("Main", "MainActivity");
 
         // If a notification message is tapped, any data accompanying the notification
         // message is available in the intent extras. In this sample the launcher
@@ -153,15 +152,6 @@ public class MainActivity extends Base
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        // [START shared_tracker]
-        // Obtain the shared Tracker instance.
-        AnalyticsApplication application = (AnalyticsApplication) getApplication();
-        mTracker = application.getDefaultTracker();
-        // [END shared_tracker]
-        // [START screen_view_hit]
-        mTracker.send(new HitBuilders.ScreenViewBuilder().build());
-        // [END screen_view_hit]
-        // Views
         mStatusTextView = findViewById(R.id.status);
         person = findViewById(R.id.image_profile_picture);
         main1 = findViewById(R.id.main1);
@@ -227,7 +217,17 @@ public class MainActivity extends Base
             // [END_EXCLUDE]
         };
         // [END auth_state_listener]
-
+        FirebaseInstallations.getInstance().getId()
+                .addOnCompleteListener(new OnCompleteListener<String>() {
+                    @Override
+                    public void onComplete(@NonNull Task<String> task) {
+                        if (task.isSuccessful()) {
+                            Log.d("Installations", "Installation ID: " + task.getResult());
+                        } else {
+                            Log.e("Installations", "Unable to get Installation ID");
+                        }
+                    }
+                });
     }
 
     @Override
@@ -445,14 +445,23 @@ public class MainActivity extends Base
         Toast.makeText(this, "Google Play Services error.", Toast.LENGTH_SHORT).show();
     }
 
+    // παράδειγμα event: click σε κουμπί με menu id
+    private void logMenuClick(int menuId) {
+        android.os.Bundle b = new android.os.Bundle();
+        b.putString("menu_id", String.valueOf(menuId));
+        AnalyticsTrackers.logEvent("menu_click", b);
+    }
+
     @Override
     public void onClick(View v) {
         int i = v.getId();
         switch (i) {
             case R.id.sign_in:
+                logMenuClick(R.id.sign_in);
                 signIn();
                 break;
             case R.id.status:
+                logMenuClick(R.id.status);
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
                 builder.setItems(new CharSequence[]
                                 {"Άκυρο", "Έξοδος", "Αποσύνδεση"},
@@ -475,38 +484,47 @@ public class MainActivity extends Base
                 builder.create().show();
                 break;
             case R.id.main1:
+                logMenuClick(R.id.main1);
                 Intent a = new Intent(MainActivity.this, OrganosiActivity.class);
                 startActivity(a);
                 break;
             case R.id.main2:
+                logMenuClick(R.id.main2);
                 Intent b = new Intent(MainActivity.this, KommActivity.class);
                 startActivity(b);
                 break;
             case R.id.main3:
+                logMenuClick(R.id.main3);
                 Intent c = new Intent(MainActivity.this, CalendarActivity.class);
                 startActivity(c);
                 break;
             case R.id.main4:
+                logMenuClick(R.id.main4);
                 Intent d = new Intent(MainActivity.this, EkdoseisActivity.class);
                 startActivity(d);
                 break;
             case R.id.main5:
+                logMenuClick(R.id.main5);
                 Intent e = new Intent(MainActivity.this, Image.class);
                 startActivity(e);
                 break;
             case R.id.main6:
+                logMenuClick(R.id.main6);
                 Intent f = new Intent(MainActivity.this, LiveVideoActivity.class);
                 startActivity(f);
                 break;
             case R.id.main7:
+                logMenuClick(R.id.main7);
                 Intent g = new Intent(MainActivity.this, NeaActivity.class);
                 startActivity(g);
                 break;
             case R.id.main8:
-                Intent h = new Intent(MainActivity.this, TimelineActivity.class);
+                logMenuClick(R.id.main8);
+                Intent h = new Intent(MainActivity.this, MpsActivity.class);
                 startActivity(h);
                 break;
             case R.id.main9:
+                logMenuClick(R.id.main9);
                 Intent j = new Intent(MainActivity.this, Diafaneia.class);
                 startActivity(j);
                 break;

@@ -7,29 +7,16 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
 
-import com.google.android.gms.analytics.HitBuilders;
-import com.google.android.gms.analytics.Tracker;
 
 import java.util.List;
 
 public class Share extends Activity {
-    private Tracker mTracker;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // [START shared_tracker]
-        // Obtain the shared Tracker instance.
-        AnalyticsApplication application = (AnalyticsApplication) getApplication();
-        mTracker = application.getDefaultTracker();
-        mTracker.send(new HitBuilders.ScreenViewBuilder().build());
-        // [END shared_tracker]
-        // [START custom_event]
-        mTracker.send(new HitBuilders.EventBuilder()
-                .setCategory("Action")
-                .setAction("Share")
-                .build());
-        // [END custom_event]
+
         Intent intentb = getIntent();
         String action = intentb.getAction();
         Uri data = intentb.getData();

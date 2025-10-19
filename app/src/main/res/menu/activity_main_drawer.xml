@@ -115,12 +115,5 @@
 
         </menu>
     </item>
-    <item android:title="@string/diktio">
-        <menu>
-            <item
-                android:id="@+id/nav_twitter"
-                android:icon="@drawable/twitter_48"
-                android:title="@string/twitter" />
-        </menu>
-    </item>
+
 </menu>

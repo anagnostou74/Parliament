@@ -1,31 +1,27 @@
 package gr.mobap;
 
 import android.content.ActivityNotFoundException;
-import android.content.BroadcastReceiver;
 import android.content.Intent;
 import android.content.pm.ResolveInfo;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Parcelable;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
+import android.window.OnBackInvokedCallback;
+import android.window.OnBackInvokedDispatcher;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
-import com.google.android.gms.analytics.HitBuilders;
-import com.google.android.gms.analytics.Tracker;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
-import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.material.navigation.NavigationView;
-import com.google.firebase.analytics.FirebaseAnalytics;
-import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,32 +42,62 @@ import gr.mobap.rss.activities.NsKatActivity;
 import gr.mobap.rss.activities.NsPsActivity;
 import gr.mobap.rss.activities.SinEpActivity;
 import gr.mobap.simera.CalendarActivity;
-import gr.mobap.twitter.TimelineActivity;
 import gr.mobap.video.LiveVideoActivity;
 import gr.mobap.video.LiveVideoDioActivity;
-import gr.mobap.video.LiveVideoThreeeActivity;
+import gr.mobap.video.LiveVideoThreeActivity;
 import gr.mobap.vouli.Thesmos;
 import gr.mobap.web.MailWeb;
 import gr.mobap.web.SindesmoiActivity;
-import gr.mobap.youtube.IntentsTvActivity;
+import gr.mobap.youtube.YoutubeFeedActivity;
+import android.os.Bundle;
+import android.view.Gravity;
+
+import androidx.activity.OnBackPressedCallback;
+import androidx.annotation.Nullable;
+
+
 
 /**
  * Created by kanag on 15/Οκτ/2016.
  */
 
 public class Base extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
-    private static final int RC_SIGN_IN = 9001;
-    private GoogleApiClient mGoogleApiClient;
-    private Tracker mTracker;
-    private BroadcastReceiver mRegistrationBroadcastReceiver;
-    private ProgressBar mRegistrationProgressBar;
-    private TextView mInformationTextView;
-    private boolean isReceiverRegistered;
+
+    private DrawerLayout drawerLayout;
+
     private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
     public String TAG = getClass().getSimpleName();
-    private FirebaseAnalytics mFirebaseAnalytics;
-    private FirebaseAuth mAuth;
-    private FirebaseAuth.AuthStateListener mAuthListener;
+
+
+    /**
+     * Επέστρεψε λογικό screen name (π.χ. "Ekdoseis", "Main")
+     */
+    protected String screenName() {
+        return "Main";
+    }
+
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        // Αν χρησιμοποιείται drawerLayout, πρέπει να το ορίσει το child activity (π.χ. MainActivity)
+        // drawerLayout = findViewById(R.id.drawer_layout); // <-- Θέλει να το κάνει override το child
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            registerBackCallbackForApi33();
+        } else {
+            getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+                @Override
+                public void handleOnBackPressed() {
+                    if (drawerLayout != null && drawerLayout.isDrawerOpen(GravityCompat.START)) {
+                        drawerLayout.closeDrawer(GravityCompat.START);
+                    } else {
+                        setEnabled(false); // allow default behavior
+                        Base.super.onBackPressed();
+                    }
+                }
+            });
+        }
+    }
 
     /**
      * Check the device to make sure it has the Google Play Services APK. If
@@ -97,27 +123,14 @@ public class Base extends AppCompatActivity implements NavigationView.OnNavigati
 
     private void klisi() {
         AnalyticsApplication application = (AnalyticsApplication) getApplication();
-        mTracker = application.getDefaultTracker();
-        // [START custom_event]
         String phone = "+302103707000";
         Intent intent = new Intent(Intent.ACTION_DIAL, Uri.fromParts("tel", phone, null));
         startActivity(intent);
-        mTracker.send(new HitBuilders.EventBuilder()
-                .setCategory("Action")
-                .setAction("Call")
-                .build());
-        // [END custom_event]
     }
 
     private void mail() {
         AnalyticsApplication application = (AnalyticsApplication) getApplication();
-        mTracker = application.getDefaultTracker();
-        // [START custom_event]
-        mTracker.send(new HitBuilders.EventBuilder()
-                .setCategory("Action")
-                .setAction("Mail")
-                .build());
-        // [END custom_event]
+
         Intent i = new Intent(Intent.ACTION_SEND);
         i.setType("message/rfc822");
         i.putExtra(Intent.EXTRA_EMAIL,
@@ -168,7 +181,7 @@ public class Base extends AppCompatActivity implements NavigationView.OnNavigati
             Intent i = new Intent(Base.this, Image.class);
             startActivity(i);
         } else if (id == R.id.nav_kanali) {
-            Intent i = new Intent(Base.this, IntentsTvActivity.class);
+            Intent i = new Intent(Base.this, YoutubeFeedActivity.class);
             startActivity(i);
         } else if (id == R.id.nav_live_ena) {
             Intent i = new Intent(Base.this, LiveVideoActivity.class);
@@ -177,7 +190,7 @@ public class Base extends AppCompatActivity implements NavigationView.OnNavigati
             Intent i = new Intent(Base.this, LiveVideoDioActivity.class);
             startActivity(i);
         } else if (id == R.id.nav_live_three) {
-            Intent i = new Intent(Base.this, LiveVideoThreeeActivity.class);
+            Intent i = new Intent(Base.this, LiveVideoThreeActivity.class);
             startActivity(i);
         } else if (id == R.id.nav_nea) {
             Intent i = new Intent(Base.this, NeaActivity.class);
@@ -203,22 +216,35 @@ public class Base extends AppCompatActivity implements NavigationView.OnNavigati
         } else if (id == R.id.nav_drastiriotites) {
             Intent i = new Intent(Base.this, DrastActivity.class);
             startActivity(i);
-        } else if (id == R.id.nav_twitter) {
-            Intent i = new Intent(Base.this, TimelineActivity.class);
-            startActivity(i);
         }
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
 
-    @Override
-    public void onBackPressed() {
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
+    // Για Android 13+ (API 33)
+    private final OnBackInvokedCallback backInvokedCallback = () -> {
+        if (drawerLayout != null && drawerLayout.isDrawerOpen(GravityCompat.START)) {
+            drawerLayout.closeDrawer(GravityCompat.START);
         } else {
-            super.onBackPressed();
+            finish(); // ή super.onBackPressed() αν θες παλιότερη συμπεριφορά
+        }
+    };
+
+    @RequiresApi(api = Build.VERSION_CODES.TIRAMISU)
+    private void registerBackCallbackForApi33() {
+        OnBackInvokedDispatcher dispatcher = getOnBackInvokedDispatcher();
+        dispatcher.registerOnBackInvokedCallback(
+                OnBackInvokedDispatcher.PRIORITY_DEFAULT,
+                backInvokedCallback
+        );
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            getOnBackInvokedDispatcher().unregisterOnBackInvokedCallback(backInvokedCallback);
         }
     }
 
@@ -282,17 +308,11 @@ public class Base extends AppCompatActivity implements NavigationView.OnNavigati
 
     private void shareSocial() {
         AnalyticsApplication application = (AnalyticsApplication) getApplication();
-        mTracker = application.getDefaultTracker();
         CharSequence subject = "Δες τι βρήκα!";
         CharSequence text = "Αξίζει να κατεβάσεις αυτή την εφαρμογή για να βλέπεις εργασίες, που επηρεάζουν το δικό σου σήμερα " +
                 "https://play.google.com/store/apps/details?id=gr.mobap";
         Uri imageUri = Uri.parse("android.resource://" + getPackageName() + "/drawable/" + "share");
-        // [START custom_event]
-        mTracker.send(new HitBuilders.EventBuilder()
-                .setCategory("Action")
-                .setAction("Share")
-                .build());
-        // [END custom_event]
+
 
         Intent intent = new Intent();
         intent.setAction(Intent.ACTION_SEND);
@@ -331,4 +351,15 @@ public class Base extends AppCompatActivity implements NavigationView.OnNavigati
         finish();
         startActivity(getIntent());
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        String sn = screenName();
+        if (sn != null && !sn.isEmpty()) {
+            AnalyticsTrackers.logScreen(sn, getClass().getSimpleName());
+        }
+    }
+
+
 }

@@ -6,7 +6,6 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
 import gr.mobap.R;
 
 public class MpsViewHolder extends RecyclerView.ViewHolder {
@@ -54,7 +53,7 @@ public class MpsViewHolder extends RecyclerView.ViewHolder {
         spoudes = itemView.findViewById(R.id.spoudes);
         languages = itemView.findViewById(R.id.languages);
         address = itemView.findViewById(R.id.address);
-        email = itemView.findViewById(R.id.email);
+        email = itemView.findViewById(R.id.email_img);
         instagram = itemView.findViewById(R.id.insta_img);
         linkedin = itemView.findViewById(R.id.linkedin_img);
 

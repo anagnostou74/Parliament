@@ -17,8 +17,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.bumptech.glide.Glide;
-import com.google.android.gms.analytics.HitBuilders;
-import com.google.android.gms.analytics.Tracker;
+
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.database.DataSnapshot;
@@ -36,7 +35,6 @@ public class SingleGovItemView extends Base {
 
     public String TAG = getClass().getSimpleName();
     private String mPostKey;
-    private Tracker mTracker;
     private FirebaseAnalytics mFirebaseAnalytics;
     public static final String EXTRA_POST_KEY = "post_key";
     private DatabaseReference mMpsReference;
@@ -90,12 +88,6 @@ public class SingleGovItemView extends Base {
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-        // [START shared_tracker]
-        // Obtain the shared Tracker instance.
-        AnalyticsApplication application = (AnalyticsApplication) getApplication();
-        mTracker = application.getDefaultTracker();
-        mTracker.send(new HitBuilders.ScreenViewBuilder().build());
-        // [END shared_tracker]
 
         // Get post key from intent
         mPostKey = getIntent().getStringExtra(EXTRA_POST_KEY);
@@ -189,12 +181,7 @@ public class SingleGovItemView extends Base {
                 }
                 // [END_EXCLUDE]
                 phoneImage.setOnClickListener(v -> {
-                    // [START custom_event]
-                    mTracker.send(new HitBuilders.EventBuilder()
-                            .setCategory("Action")
-                            .setAction("CallMps")
-                            .build());
-                    // [END custom_event]
+
                     String po = mps.phone;
                     Intent intent1 = new Intent(Intent.ACTION_DIAL, Uri.fromParts("tel", po, null));
                     startActivity(intent1);

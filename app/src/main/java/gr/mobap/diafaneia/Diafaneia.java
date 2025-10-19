@@ -18,14 +18,8 @@ import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
 
-import com.google.android.gms.analytics.HitBuilders;
-import com.google.android.gms.analytics.Tracker;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.analytics.FirebaseAnalytics;
-import com.google.firebase.appindexing.Action;
-import com.google.firebase.appindexing.FirebaseAppIndex;
-import com.google.firebase.appindexing.FirebaseUserActions;
-import com.google.firebase.appindexing.builders.Actions;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -45,7 +39,7 @@ public class Diafaneia extends Base {
     private ProgressDialog progress;
 
     // URL to get data JSON
-    private static String url = "https://diafaneia.hellenicparliament.gr/api.ashx?q=documents&pageSize=100";
+    private static final String url = "https://diafaneia.hellenicparliament.gr/api.ashx?q=documents&pageSize=100";
     private FirebaseAnalytics mFirebaseAnalytics;
     // JSON Node names
     private static final String TAG_Data = "Data";
@@ -123,7 +117,7 @@ public class Diafaneia extends Base {
 
     // Hashmap for ListView
     ArrayList<HashMap<String, String>> dataList;
-    private Tracker mTracker;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -146,12 +140,6 @@ public class Diafaneia extends Base {
         toggle.syncState();
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-        // [START shared_tracker]
-        // Obtain the shared Tracker instance.
-        AnalyticsApplication application = (AnalyticsApplication) getApplication();
-        mTracker = application.getDefaultTracker();
-        mTracker.send(new HitBuilders.ScreenViewBuilder().build());
-        // [END shared_tracker]
 
         dataList = new ArrayList<>();
         ListView lv = findViewById(R.id.listdiaf);
@@ -175,27 +163,6 @@ public class Diafaneia extends Base {
         }
     }
 
-    // After
-    public Action getAction() {
-        return Actions.newView("Diafaneia Page", "http://www.mobap.gr/diafaneia");
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-   /* If you’re logging an action on an item that has already been added to the index,
-   you don’t have to add the following update line. See
-   https://firebase.google.com/docs/app-indexing/android/personal-content#update-the-index for
-   adding content to the index */
-        FirebaseAppIndex.getInstance().update();
-        FirebaseUserActions.getInstance().start(getAction());
-    }
-
-    @Override
-    protected void onStop() {
-        FirebaseUserActions.getInstance().end(getAction());
-        super.onStop();
-    }
 
     /**
      * Async task class to get json by making HTTP call

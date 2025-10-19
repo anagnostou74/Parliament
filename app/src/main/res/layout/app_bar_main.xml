@@ -294,7 +294,7 @@
                     android:layout_toRightOf="@+id/icon"
                     android:background="@color/material_deep_orange"
                     android:gravity="center_vertical"
-                    android:text="@string/twitter"
+                    android:text="@string/mps"
                     android:textAlignment="center"
                     android:textColor="@color/colorWhite"
                     android:textStyle="bold"

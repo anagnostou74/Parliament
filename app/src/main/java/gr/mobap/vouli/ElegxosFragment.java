@@ -12,12 +12,10 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
-import com.google.android.gms.analytics.Tracker;
 
 import gr.mobap.R;
 
 public class ElegxosFragment extends Fragment {
-    private Tracker mTracker;
 
     public ElegxosFragment() {
         // Required empty public constructor
